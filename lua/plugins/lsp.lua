@@ -4,7 +4,7 @@ return {
 		"mason-org/mason-lspconfig.nvim",
 		main = "mason-lspconfig",
 		opts = {
-			ensure_installed = { "lua_ls", "vtsls", "vue_ls", "somesass_ls" },
+			ensure_installed = { "lua_ls", "vtsls", "vue_ls", "somesass_ls", "eslint" },
 		},
 		dependencies = { "mason-org/mason.nvim" },
 	},
@@ -51,6 +51,12 @@ return {
 			lsp.somesass_ls.setup({
 				capabilities = capabilities,
 				filetypes = { "sass", "scss", "css", "vue" },
+			})
+
+			lsp.eslint.setup({
+				capabilities = capabilities,
+				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
+				root_dir = root_pattern("package.json", ".eslintrc.json", ".eslintrc.js", ".git"),
 			})
 		end,
 	},
@@ -133,21 +139,26 @@ return {
 	},
 	{
 		"mfussenegger/nvim-lint",
-		event = { "BufWritePost", "InsertLeave" },
+		event = { "BufWritePost", "InsertLeave", "TextChanged" },
 		config = function()
 			local lint = require("lint")
 			lint.linters_by_ft = {
 				lua = { "luacheck" },
 				python = { "flake8" },
-				javascript = { "eslint_d" },
-				typescript = { "eslint_d" },
-				vue = { "eslint_d" },
+				-- javascript = { "eslint_d" },
+				-- typescript = { "eslint_d" },
+				-- vue = { "eslint_d" },
 				css = { "stylelint" },
 				scss = { "stylelint" },
 				sass = { "stylelint" },
 				html = { "htmlhint" },
 			}
-            lint.linters.eslint_d.args = { "--no-warn-ignored", "--stdin", "--stdin-filename", "%filepath" }
+			-- lint.linters.eslint_d.args = {
+			-- 	"--format=json",
+			-- 	"--stdin",
+			-- 	"--stdin-filename",
+			-- 	"%filepath",
+			-- }
 
 			vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
 				group = vim.api.nvim_create_augroup("NvimLint", { clear = true }),

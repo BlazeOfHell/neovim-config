@@ -38,7 +38,7 @@ return {
 			"nvim-telescope/telescope.nvim",
 			"ibhagwan/fzf-lua",
 			"stevearc/dressing.nvim",
-			"folke/snacks.nvim",
+			{ "folke/snacks.nvim", opts = {} },
 			"nvim-tree/nvim-web-devicons",
 			'Kaiser-Yang/blink-cmp-avante',
 			"zbirenbaum/copilot.lua",

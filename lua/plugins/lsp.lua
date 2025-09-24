@@ -13,14 +13,12 @@ return {
 		dependencies = { "saghen/blink.cmp" },
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
-			local lsp = require("lspconfig")
+			local lspconfig = vim.lsp.config
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			local root_pattern = lsp.util.root_pattern
-
-			lsp.lua_ls.setup({
+			lspconfig("lua_ls", {
 				capabilities = capabilities,
-				root_dir = root_pattern(".luarc.json", ".luacheckrc", ".git"),
+				root_markers = { ".luarc.json", ".luacheckrc", ".git" },
 				settings = {
 					Lua = { diagnostics = { globals = { "vim", "require" } } },
 				},
@@ -29,10 +27,10 @@ return {
 			local volar_path = vim.fn.stdpath("data")
 				.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 
-			lsp.vtsls.setup({
+			lspconfig("vtsls", {
 				capabilities = capabilities,
 				filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" },
-				root_dir = root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
+				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 				settings = {
 					vtsls = {
 						tsserver = {
@@ -48,15 +46,15 @@ return {
 				},
 			})
 
-			lsp.somesass_ls.setup({
+			lspconfig("somesass_ls", {
 				capabilities = capabilities,
 				filetypes = { "sass", "scss", "css", "vue" },
 			})
 
-			lsp.eslint.setup({
+			lspconfig("eslint", {
 				capabilities = capabilities,
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
-				root_dir = root_pattern("package.json", ".eslintrc.json", ".eslintrc.js", ".git"),
+				root_markers = { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" },
 			})
 		end,
 	},
@@ -66,7 +64,7 @@ return {
 		dependencies = {
 			"rafamadriz/friendly-snippets",
 		},
-		build = "cargo +nightly build --release",
+		build = "cargo build --release",
 		opts = {
 			sources = {
 				default = { "lsp", "path", "snippets", "avante", "lazydev" },

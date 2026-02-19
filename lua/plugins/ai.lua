@@ -18,52 +18,6 @@ return {
 		},
 	},
 	{
-		"yetone/avante.nvim",
-		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-		-- ⚠️ must add this setting! ! !
-		build = vim.fn.has("win32") ~= 0
-			and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-			or "make BUILD_FROM_SOURCE=true",
-		event = "VeryLazy",
-		version = false, -- Never set this value to "*"! Never!
-		---@module 'avante'
-		---@type avante.Config
-		opts = {
-			mode = "legacy"
-		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
-			"echasnovski/mini.pick",
-			"nvim-telescope/telescope.nvim",
-			"ibhagwan/fzf-lua",
-			"stevearc/dressing.nvim",
-			{ "folke/snacks.nvim", opts = {} },
-			"nvim-tree/nvim-web-devicons",
-			'Kaiser-Yang/blink-cmp-avante',
-			"zbirenbaum/copilot.lua",
-			{
-				'MeanderingProgrammer/render-markdown.nvim',
-				opts = {
-					file_types = { "markdown", "Avante" },
-				},
-				ft = { "markdown", "Avante" },
-			},
-		}
-	},
-	-- {
-	-- 	"olimorris/codecompanion.nvim",
-	-- 	opts = {},
-	-- 	dependencies = {
-	-- 		"nvim-lua/plenary.nvim",
-	-- 		"nvim-treesitter/nvim-treesitter",
-	-- 		{
-	-- 			"MeanderingProgrammer/render-markdown.nvim",
-	-- 			ft = { "markdown", "codecompanion" }
-	-- 		},
-	-- 	},
-	-- },
-	{
 		"echasnovski/mini.diff",
 		config = function()
 			local diff = require("mini.diff")
@@ -73,4 +27,56 @@ return {
 			})
 		end,
 	},
+	{
+		"carlos-algms/agentic.nvim",
+
+		opts = {
+			-- Available by default: "claude-acp" | "gemini-acp" | "codex-acp" | "opencode-acp" | "cursor-acp" | "auggie-acp"
+			provider = "codex-acp",
+			diff_preview = {
+				enabled = true,
+				layout = "split", -- "split" or "inline"
+				center_on_navigate_hunks = true,
+			},
+		},
+
+		keys = {
+			{
+				"<leader>ac",
+				function() require("agentic").toggle() end,
+				mode = { "n", "v" },
+				desc = "Toggle Agentic Chat"
+			},
+			{
+				"<leader>a@",
+				function() require("agentic").add_selection_or_file_to_context() end,
+				mode = { "n" },
+				desc = "Add file or selection to Agentic to Context"
+			},
+			{
+				"<leader>an",
+				function() require("agentic").new_session() end,
+				mode = { "n", "v" },
+				desc = "New Agentic Session"
+			},
+			{
+				"<leader>ar", -- ai Restore
+				function()
+					require("agentic").restore_session()
+				end,
+				desc = "Agentic Restore session",
+				silent = true,
+				mode = { "n" },
+			},
+			{
+				"<leader>as", -- ai stop
+				function()
+					require("agentic").stop_generation()
+				end,
+				desc = "Agentic Stop generation",
+				silent = true,
+				mode = { "n" },
+			}
+		},
+	}
 }

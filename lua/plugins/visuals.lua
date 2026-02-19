@@ -80,8 +80,8 @@ return {
 				options = {
 					icons_enabled = true,
 					disabled_filetypes = {
-						statusline = { "Avante", "AvanteInput", "AvanteTodos", "AvanteFiles", "neo-tree", "NvimTree" },
-						winbar = { "Avante", "AvanteInput", "neo-tree", "NvimTree" },
+						statusline = { "neo-tree", "NvimTree" },
+						winbar = { "neo-tree", "NvimTree" },
 					},
 				},
 			})

@@ -46,6 +46,13 @@ return {
 				},
 			})
 
+
+			lspconfig("vue_ls", {
+				capabilities = capabilities,
+				filetypes = { "vue", "javascript", "javascriptreact" },
+				root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" }
+			})
+
 			lspconfig("somesass_ls", {
 				capabilities = capabilities,
 				filetypes = { "sass", "scss", "css", "vue" },
@@ -67,19 +74,12 @@ return {
 		build = "cargo build --release",
 		opts = {
 			sources = {
-				default = { "lsp", "path", "snippets", "avante", "lazydev" },
+				default = { "lsp", "path", "snippets", "lazydev" },
 				providers = {
 					lazydev = {
 						name = "LazyDev",
 						module = "lazydev.integrations.blink",
 						score_offset = 100,
-					},
-					avante = {
-						module = "blink-cmp-avante",
-						name = "Avante",
-						opts = {
-							-- options for blink-cmp-avante
-						},
 					},
 				},
 			},
@@ -91,37 +91,19 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+		lazy = false,
 		opts = {
-			auto_install = true,
 			highlight = {
 				enable = true,
-				additional_vim_regex_highlighting = true,
-			},
-			indent = { enable = true },
-			ensure_installed = {
-				"lua",
-				"javascript",
-				"typescript",
-				"html",
-				"css",
-				"json",
-				"regex",
-				"bash",
-				"vue",
-				"scss",
-			},
-			incremental_selection = {
-				enable = true,
-				keymaps = {
-					init_selection = "<C-n>",
-					node_incremental = "<C-n>",
-					scope_incremental = "<C-s>",
-					node_decremental = "<C-p>",
-				},
+				additional_vim_regex_highlighting = false,
 			},
 		},
 		config = function(_, opts)
 			require("nvim-treesitter").setup(opts)
+			vim.api.nvim_create_autocmd('FileType', {
+				pattern = { 'javascript', 'typescript', 'vue', 'css', 'scss', 'sass', 'html', 'lua', 'php', 'python', 'c', 'cpp' },
+				callback = function() vim.treesitter.start() end,
+			})
 		end,
 	},
 	{

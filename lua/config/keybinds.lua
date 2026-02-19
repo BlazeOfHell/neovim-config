@@ -65,9 +65,6 @@ vim.keymap.set("i", "<M-[>", function()
 	require("copilot.suggestion").prev()
 end, { desc = "Copilot Previous Suggestion", silent = true })
 
--- map("n", "<leader>ac", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "AI chat" })
--- map("n", "<leader>ap", "<cmd>CodeCompanionActions<cr>", { desc = "AI palette" })
-
 -- Move to previous/next
 map("n", "<A-,>", "<Cmd>BufferPrevious<CR>", opts)
 map("n", "<A-.>", "<Cmd>BufferNext<CR>", opts)

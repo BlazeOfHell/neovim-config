@@ -8,6 +8,8 @@ vim.opt.smartindent = true
 vim.opt.expandtab = true
 vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1

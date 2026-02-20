@@ -63,6 +63,12 @@ return {
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
 				root_markers = { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" },
 			})
+
+			lspconfig("intelephense", {
+				capabilities = capabilities,
+				filetypes = { "php" },
+				root_markers = { "composer.json", ".git" },
+			})
 		end,
 	},
 	{

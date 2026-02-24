@@ -13,7 +13,8 @@ return {
 		version = "*",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-fzf-native.nvim", build = "make"
+			"nvim-telescope/telescope-fzf-native.nvim",
+			build = "make"
 		},
 	},
 	{
@@ -35,14 +36,14 @@ return {
 			require("mini.icons").setup({
 				icons = {
 					diagnostics = {
-						error = " ",
-						warn = " ",
-						info = " ",
-						hint = " ",
+						error = " ",
+						warn = " ",
+						info = " ",
+						hint = " ",
 					},
 					git = {
 						add = " ",
-						modified = "柳",
+						modified = " ",
 						remove = " ",
 					},
 				},
@@ -59,7 +60,6 @@ return {
 					override = {
 						["vim.lsp.util.convert_input_to_markdown_lines"] = true,
 						["vim.lsp.util.stylize_markdown"] = true,
-						["cmp.entry.get_documentation"] = true,
 					},
 				},
 				presets = {
@@ -152,25 +152,50 @@ return {
 				TODO = { icon = " ", color = "info" },
 				HACK = { icon = " ", color = "warning" },
 				WARN = { icon = " ", color = "warning" },
-				PERF = { icon = " ", color = "hint" },
-				NOTE = { icon = " ", color = "hint" },
+				PERF = { icon = "󰓅 ", color = "hint" },
+				NOTE = { icon = " ", color = "hint" },
 			},
 		},
 	},
 	{
-		"romgrk/barbar.nvim",
-		dependencies = {
-			"lewis6991/gitsigns.nvim", -- OPTIONAL: for git status
-			"nvim-tree/nvim-web-devicons", -- OPTIONAL: for file icons
-			"echasnovski/mini.icons", -- OPTIONAL: for custom icons
-		},
-		init = function()
-			vim.g.barbar_auto_setup = false
-		end,
+		"lewis6991/gitsigns.nvim",
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
-			animation = true,
-			auto_hide = 1,
+			signs = {
+				add          = { text = '┃' },
+				change       = { text = '┃' },
+				delete       = { text = '_' },
+				topdelete    = { text = '‾' },
+				changedelete = { text = '~' },
+				untracked    = { text = '┆' },
+			},
+			signcolumn = true,
 		},
-		version = "^1.0.0", -- optional: only update when a new 1.x version is released
 	},
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		---@module "ibl"
+		---@type ibl.config
+		opts = {
+			whitespace = {
+				remove_blankline_trail = true,
+			},
+			indent = {
+				char = "▏",
+			},
+			exclude = {
+				filetypes = {
+					"help",
+					"dashboard",
+					"lazy",
+					"neo-tree",
+					"terminal",
+					"nofile",
+					"quickfix",
+					"prompt"
+				},
+			},
+		}
+	}
 }

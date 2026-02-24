@@ -10,6 +10,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.termguicolors = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+vim.opt.autoread = true
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -27,7 +28,11 @@ vim.opt.sidescrolloff = 10
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
-vim.opt.clipboard = "unnamedplus"
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldenable = false
+
+vim.opt.clipboard = ""
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",

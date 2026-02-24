@@ -29,7 +29,7 @@ return {
 
 			lspconfig("vtsls", {
 				capabilities = capabilities,
-				filetypes = { "typescript", "javascript", "typescriptreact", "javascriptreact", "vue" },
+				filetypes = { "vue" },
 				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 				settings = {
 					vtsls = {
@@ -46,10 +46,9 @@ return {
 				},
 			})
 
-
 			lspconfig("vue_ls", {
 				capabilities = capabilities,
-				filetypes = { "vue", "javascript", "javascriptreact" },
+				filetypes = { "vue" },
 				root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" }
 			})
 
@@ -68,6 +67,12 @@ return {
 				capabilities = capabilities,
 				filetypes = { "php" },
 				root_markers = { "composer.json", ".git" },
+			})
+
+			lspconfig("ts_ls", {
+				capabilities = capabilities,
+				filetypes = { "javascript", "typescript", "typescriptreact" },
+				root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 			})
 		end,
 	},

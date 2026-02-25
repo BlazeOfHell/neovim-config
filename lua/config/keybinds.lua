@@ -1,14 +1,48 @@
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
 
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 -- Stop search highlighting
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Stop search highlighting" })
 
 -- Telescope
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Grep" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffers" })
+local function is_agentic_window(winid)
+	local bufnr = vim.api.nvim_win_get_buf(winid)
+	local ft = vim.bo[bufnr].filetype or ""
+	return ft:match("^Agentic") ~= nil
+end
+
+local function focus_non_agentic_window()
+	if not is_agentic_window(vim.api.nvim_get_current_win()) then
+		return
+	end
+
+	for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+		if vim.api.nvim_win_is_valid(winid) and not is_agentic_window(winid) then
+			local config = vim.api.nvim_win_get_config(winid)
+			local bufnr = vim.api.nvim_win_get_buf(winid)
+			local bt = vim.bo[bufnr].buftype or ""
+			if config.relative == "" and bt == "" then
+				vim.api.nvim_set_current_win(winid)
+				return
+			end
+		end
+	end
+end
+
+local function telescope(cmd)
+	focus_non_agentic_window()
+	vim.cmd("Telescope " .. cmd)
+end
+
+map("n", "<leader>ff", function()
+	telescope("find_files")
+end, { desc = "Find files" })
+map("n", "<leader>fg", function()
+	telescope("live_grep")
+end, { desc = "Grep" })
+map("n", "<leader>fb", function()
+	telescope("buffers")
+end, { desc = "Buffers" })
 
 -- Noice
 map("n", "<leader>sn", "<cmd>Noice telescope<cr>", { desc = "Noice history" })
@@ -16,7 +50,9 @@ map("n", "<leader>sm", "<cmd>Noice dismiss<cr>", { desc = "Dismiss messages" })
 
 -- File tree
 map("n", "<leader>et", "<cmd>Neotree<cr>", { desc = "Explorer" })
-map("n", "<leader>ef", "<cmd>Telescope file_browser<cr>", { desc = "Floating Explorer" })
+map("n", "<leader>ef", function()
+	telescope("file_browser")
+end, { desc = "Floating Explorer" })
 
 -- LSP (global fallbacks; buffer-local ones belong in on_attach)
 map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Goto Definition" })
@@ -85,6 +121,27 @@ end, { desc = "Copilot Next Suggestion", silent = true })
 map("i", "<M-[>", function()
 	require("copilot.suggestion").prev()
 end, { desc = "Copilot Previous Suggestion", silent = true })
+
+-- Agentic controls
+map({ "n", "v" }, "<leader>ac", function()
+	require("agentic").toggle()
+end, { desc = "Toggle Agentic Chat", silent = true })
+
+map("n", "<leader>a@", function()
+	require("agentic").add_selection_or_file_to_context()
+end, { desc = "Add file or selection to Agentic to Context", silent = true })
+
+map({ "n", "v" }, "<leader>an", function()
+	require("agentic").new_session()
+end, { desc = "New Agentic Session", silent = true })
+
+map("n", "<leader>ar", function()
+	require("agentic").restore_session()
+end, { desc = "Agentic Restore session", silent = true })
+
+map("n", "<leader>as", function()
+	require("agentic").stop_generation()
+end, { desc = "Agentic Stop generation", silent = true })
 
 -- Clipboard (explicit system clipboard actions)
 map({ "n", "v" }, "<leader>xy", '"+y', { desc = "Yank to system clipboard" })

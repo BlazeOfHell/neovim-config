@@ -170,6 +170,7 @@ return {
 				untracked    = { text = '┆' },
 			},
 			signcolumn = true,
+			sign_priority = 100,
 		},
 	},
 	{

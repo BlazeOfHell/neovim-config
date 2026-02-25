@@ -16,6 +16,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.opt.updatetime = 100
+vim.opt.timeout = true
 vim.opt.timeoutlen = 500
 vim.opt.laststatus = 3
 

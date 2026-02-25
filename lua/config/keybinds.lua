@@ -154,6 +154,9 @@ map("n", "<leader>xD", '"_D', { desc = "Delete line tail without yanking" })
 -- which-key groups
 local wk = require("which-key")
 map("n", "<leader>h", "<cmd>WhichKey<cr>", { desc = "Show keybinds" })
+map({ "n", "v" }, "<leader>", function()
+	wk.show({ keys = "<leader>" })
+end, { desc = "Show leader keybinds", silent = true })
 wk.add({
 	{ "<leader>f", group = "Find/Search" }, -- covers <leader>ff, <leader>fg
 	{ "<leader>s", group = "Noice / Messages" }, -- covers <leader>sn, <leader>sm

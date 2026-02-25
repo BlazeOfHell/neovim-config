@@ -95,7 +95,7 @@ return {
 				-- config
 			})
 		end,
-		dependencies = { { "nvim-tree/nvim-web-devicons" } },
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
 	{
 		"nvim-neo-tree/neo-tree.nvim",
@@ -174,29 +174,12 @@ return {
 		},
 	},
 	{
-		"lukas-reineke/indent-blankline.nvim",
-		main = "ibl",
-		---@module "ibl"
-		---@type ibl.config
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		---@type snacks.Config
 		opts = {
-			whitespace = {
-				remove_blankline_trail = true,
-			},
-			indent = {
-				char = "▏",
-			},
-			exclude = {
-				filetypes = {
-					"help",
-					"dashboard",
-					"lazy",
-					"neo-tree",
-					"terminal",
-					"nofile",
-					"quickfix",
-					"prompt"
-				},
-			},
-		}
+			statuscolumn = { enabled = true }
+		},
 	}
 }

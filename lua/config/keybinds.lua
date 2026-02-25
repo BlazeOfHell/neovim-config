@@ -63,8 +63,23 @@ map("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
 map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
 map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Prev Diagnostic" })
 map("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next Diagnostic" })
+map("n", "<leader>cd", function()
+	vim.diagnostic.open_float(nil, { border = "rounded", source = "if_many" })
+end, { desc = "Line Diagnostics" })
 map("n", "<leader>cq", "<cmd>lua vim.diagnostic.setqflist()<cr>", { desc = "Diagnostics to Quickfix" })
+map("n", "<leader>cQ", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Diagnostics to Location List" })
 map("n", "<leader>clr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
+map("n", "<leader>clf", "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", { desc = "Format Document (LSP)" })
+
+-- Quickfix / location list
+map("n", "<leader>qo", "<cmd>copen<cr>", { desc = "Quickfix Open" })
+map("n", "<leader>qc", "<cmd>cclose<cr>", { desc = "Quickfix Close" })
+map("n", "]q", "<cmd>cnext<cr>", { desc = "Next Quickfix Item" })
+map("n", "[q", "<cmd>cprev<cr>", { desc = "Prev Quickfix Item" })
+map("n", "<leader>lo", "<cmd>lopen<cr>", { desc = "Location List Open" })
+map("n", "<leader>lc", "<cmd>lclose<cr>", { desc = "Location List Close" })
+map("n", "]l", "<cmd>lnext<cr>", { desc = "Next Location Item" })
+map("n", "[l", "<cmd>lprev<cr>", { desc = "Prev Location Item" })
 
 -- Formatting
 local conform = require("conform")
@@ -151,12 +166,21 @@ map({ "n", "v" }, "<leader>xP", '"+P', { desc = "Paste before from system clipbo
 map({ "n", "v" }, "<leader>xd", '"_d', { desc = "Delete without yanking" })
 map("n", "<leader>xD", '"_D', { desc = "Delete line tail without yanking" })
 
+-- Folds (using ufo)
+map('n', 'zR', require('ufo').openAllFolds)
+map('n', 'zM', require('ufo').closeAllFolds)
+map('n', 'zr', require('ufo').openFoldsExceptKinds)
+map('n', 'zm', require('ufo').closeFoldsWith)
+map('n', 'K', function()
+	local winid = require('ufo').peekFoldedLinesUnderCursor()
+	if not winid then
+		vim.lsp.buf.hover()
+	end
+end)
+
 -- which-key groups
 local wk = require("which-key")
 map("n", "<leader>h", "<cmd>WhichKey<cr>", { desc = "Show keybinds" })
-map({ "n", "v" }, "<leader>", function()
-	wk.show({ keys = "<leader>" })
-end, { desc = "Show leader keybinds", silent = true })
 wk.add({
 	{ "<leader>f", group = "Find/Search" }, -- covers <leader>ff, <leader>fg
 	{ "<leader>s", group = "Noice / Messages" }, -- covers <leader>sn, <leader>sm
@@ -164,6 +188,8 @@ wk.add({
 	{ "g", group = "Goto" }, -- covers gd, gr, etc.
 	{ "<leader>c", group = "Code Actions" }, -- Code actions
 	{ "<leader>cl", group = "LSP" }, -- LSP actions
+	{ "<leader>q", group = "Quickfix" },
+	{ "<leader>l", group = "Location List" },
 	{ "<leader>g", group = "Git" }, -- gitsigns actions
 	{ "<leader>a", group = "AI chat", icon = { icon = "󰚩", color = "blue" } }, -- AI specific keybinds,
 	{ "<leader>e", group = "Explorer", icon = { icon = "" } }, --  File manager keybinds

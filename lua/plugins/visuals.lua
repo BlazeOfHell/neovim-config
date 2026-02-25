@@ -179,7 +179,83 @@ return {
 		lazy = false,
 		---@type snacks.Config
 		opts = {
-			statuscolumn = { enabled = true }
+			statuscolumn = {
+				enabled = true,
+				left = { "fold", "mark", "sign" },
+				right = { "git" },
+				folds = {
+					open = true,
+					git_hl = false,
+				},
+			}
 		},
+	},
+	{
+		"kevinhwang91/nvim-ufo",
+		dependencies = { "kevinhwang91/promise-async" },
+		init = function()
+			vim.opt.foldcolumn = "1"
+			vim.opt.foldenable = true
+			vim.opt.foldlevel = 99
+			vim.opt.foldlevelstart = 99
+			vim.opt.fillchars = {
+				foldopen = "",
+				foldclose = "",
+				foldsep = " ",
+				fold = " ",
+			}
+
+			local function set_fold_highlights()
+				vim.api.nvim_set_hl(0, "Folded", { fg = "#7A88CF", bg = "NONE", italic = true })
+				vim.api.nvim_set_hl(0, "FoldColumn", { fg = "#5B6389", bg = "NONE" })
+				vim.api.nvim_set_hl(0, "UfoFoldedEllipsis", { fg = "#8992BF", bg = "NONE" })
+			end
+
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				pattern = "*",
+				callback = set_fold_highlights,
+			})
+			set_fold_highlights()
+		end,
+		opts = function()
+			local function fold_virt_text_handler(virt_text, lnum, end_lnum, width, truncate)
+				local new_virt_text = {}
+				local suffix = " ... "
+				local suffix_width = vim.fn.strdisplaywidth(suffix)
+				local target_width = width - suffix_width
+				local cur_width = 0
+
+				for _, chunk in ipairs(virt_text) do
+					local chunk_text = chunk[1]
+					local chunk_width = vim.fn.strdisplaywidth(chunk_text)
+					if cur_width + chunk_width < target_width then
+						table.insert(new_virt_text, chunk)
+					else
+						chunk_text = truncate(chunk_text, target_width - cur_width)
+						table.insert(new_virt_text, { chunk_text, chunk[2] })
+						chunk_width = vim.fn.strdisplaywidth(chunk_text)
+						if cur_width + chunk_width < target_width then
+							suffix = suffix .. (" "):rep(target_width - cur_width - chunk_width)
+						end
+						break
+					end
+					cur_width = cur_width + chunk_width
+				end
+
+				table.insert(new_virt_text, { suffix, "UfoFoldedEllipsis" })
+				return new_virt_text
+			end
+
+			return {
+				open_fold_hl_timeout = 0,
+				fold_virt_text_handler = fold_virt_text_handler,
+				provider_selector = function(_, _, buftype)
+					if buftype == "nofile" or buftype == "prompt" then
+						return { "indent" }
+					end
+					return { "treesitter", "indent" }
+				end,
+			}
+		end,
 	}
 }

@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 -- Stop search highlighting
-map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Stop search highlighting" })
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Stop highlighting/suggestions" })
 
 -- Telescope
 local function is_agentic_window(winid)
@@ -64,7 +64,7 @@ map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
 map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Prev Diagnostic" })
 map("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next Diagnostic" })
 map("n", "<leader>cd", function()
-	vim.diagnostic.open_float(nil, { border = "rounded", source = "if_many" })
+	vim.diagnostic.open_float(nil, { border = "rounded", source = "if_many", severity_sort = true })
 end, { desc = "Line Diagnostics" })
 map("n", "<leader>cq", "<cmd>lua vim.diagnostic.setqflist()<cr>", { desc = "Diagnostics to Quickfix" })
 map("n", "<leader>cQ", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Diagnostics to Location List" })
@@ -182,12 +182,12 @@ end)
 local wk = require("which-key")
 map("n", "<leader>h", "<cmd>WhichKey<cr>", { desc = "Show keybinds" })
 wk.add({
-	{ "<leader>f", group = "Find/Search" }, -- covers <leader>ff, <leader>fg
+	{ "<leader>f", group = "Find/Search" },   -- covers <leader>ff, <leader>fg
 	{ "<leader>s", group = "Noice / Messages" }, -- covers <leader>sn, <leader>sm
 	{ "<leader>r", group = "Refactor/Rename" }, -- covers <leader>rn
-	{ "g", group = "Goto" }, -- covers gd, gr, etc.
-	{ "<leader>c", group = "Code Actions" }, -- Code actions
-	{ "<leader>cl", group = "LSP" }, -- LSP actions
+	{ "g", group = "Goto" },                  -- covers gd, gr, etc.
+	{ "<leader>c", group = "Code Actions" },  -- Code actions
+	{ "<leader>cl", group = "LSP" },          -- LSP actions
 	{ "<leader>q", group = "Quickfix" },
 	{ "<leader>l", group = "Location List" },
 	{ "<leader>g", group = "Git" }, -- gitsigns actions

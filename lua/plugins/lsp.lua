@@ -15,6 +15,9 @@ return {
 		config = function()
 			local lspconfig = vim.lsp.config
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
+			vim.diagnostic.config({
+				severity_sort = true,
+			})
 
 			lspconfig("lua_ls", {
 				capabilities = capabilities,
@@ -57,11 +60,28 @@ return {
 				filetypes = { "sass", "scss", "css", "vue" },
 			})
 
-			lspconfig("eslint", {
-				capabilities = capabilities,
-				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
-				root_markers = { "package.json", ".eslintrc.json", ".eslintrc.js", ".git" },
-			})
+			-- lspconfig("eslint", {
+			-- 	capabilities = capabilities,
+			-- 	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
+			-- 	root_markers = {
+			-- 		"eslint.config.js",
+			-- 		"eslint.config.cjs",
+			-- 		"eslint.config.mjs",
+			-- 		"eslint.config.ts",
+			-- 		".eslintrc",
+			-- 		".eslintrc.js",
+			-- 		".eslintrc.cjs",
+			-- 		".eslintrc.json",
+			-- 		"package.json",
+			-- 		".git",
+			-- 	},
+			-- 	settings = {
+			-- 		validate = "on",
+			-- 		run = "onType",
+			-- 		useESLintClass = true,
+			-- 		workingDirectory = { mode = "auto" },
+			-- 	},
+			-- })
 
 			lspconfig("intelephense", {
 				capabilities = capabilities,
@@ -95,9 +115,6 @@ return {
 				},
 			},
 		},
-		-- config = function()
-		--     require("blink.cmp").setup({})
-		-- end,
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
@@ -131,36 +148,5 @@ return {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 			},
 		},
-	},
-	{
-		"mfussenegger/nvim-lint",
-		event = { "BufWritePost", "InsertLeave", "TextChanged" },
-		config = function()
-			local lint = require("lint")
-			lint.linters_by_ft = {
-				lua = { "luacheck" },
-				python = { "flake8" },
-				-- javascript = { "eslint_d" },
-				-- typescript = { "eslint_d" },
-				-- vue = { "eslint_d" },
-				css = { "stylelint" },
-				scss = { "stylelint" },
-				sass = { "stylelint" },
-				html = { "htmlhint" },
-			}
-			-- lint.linters.eslint_d.args = {
-			-- 	"--format=json",
-			-- 	"--stdin",
-			-- 	"--stdin-filename",
-			-- 	"%filepath",
-			-- }
-
-			vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
-				group = vim.api.nvim_create_augroup("NvimLint", { clear = true }),
-				callback = function()
-					lint.try_lint()
-				end,
-			})
-		end,
 	},
 }

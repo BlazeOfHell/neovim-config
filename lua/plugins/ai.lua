@@ -3,17 +3,26 @@ return {
 		"zbirenbaum/copilot.lua",
 		cmd = "Copilot",
 		build = ":Copilot auth",
-		event = "BufReadPost",
+		event = { "BufReadPre", "BufNewFile", "InsertEnter" },
 		opts = {
 			suggestion = {
-				enabled = not vim.g.ai_cmp,
+				enabled = true,
 				auto_trigger = true,
-				hide_during_completion = vim.g.ai_cmp,
+				hide_during_completion = false,
 			},
 			panel = { enabled = false },
 			filetypes = {
 				markdown = true,
 				help = true,
+			},
+			server_opts_overrides = {
+				trace = "verbose",
+				settings = {
+					advanced = {
+						listCount = 10, -- #completions for panel
+						inlineSuggestCount = 5, -- #completions for getCompletions
+					}
+				},
 			},
 		},
 	},
@@ -39,9 +48,9 @@ return {
 			},
 			acp_providers = {
 				["codex-acp"] = {
-					default_mode = "auto"
-				}
-			}
+					default_mode = "auto",
+				},
+			},
 		},
-	}
+	},
 }

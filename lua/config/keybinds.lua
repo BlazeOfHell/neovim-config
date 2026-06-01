@@ -50,25 +50,28 @@ map("n", "<leader>sm", "<cmd>Noice dismiss<cr>", { desc = "Dismiss messages" })
 
 -- File tree
 map("n", "<leader>et", "<cmd>Neotree<cr>", { desc = "Explorer" })
-map("n", "<leader>ef", function()
-	telescope("file_browser")
-end, { desc = "Floating Explorer" })
 
 -- LSP (global fallbacks; buffer-local ones belong in on_attach)
 map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", { desc = "Goto Definition" })
 map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", { desc = "Goto Declaration" })
 map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", { desc = "Goto Implementation" })
-map("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", { desc = "Hover" })
+map("n", "K", function()
+	vim.lsp.buf.hover({ border = "rounded", max_width = 100 })
+end, { desc = "Hover" })
 map("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", { desc = "References" })
 map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", { desc = "Rename" })
-map("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", { desc = "Prev Diagnostic" })
-map("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", { desc = "Next Diagnostic" })
+map("n", "[d", function()
+	vim.diagnostic.jump({ count = -1, float = true })
+end, { desc = "Prev Diagnostic" })
+map("n", "]d", function()
+	vim.diagnostic.jump({ count = 1, float = true })
+end, { desc = "Next Diagnostic" })
 map("n", "<leader>cd", function()
 	vim.diagnostic.open_float(nil, { border = "rounded", source = "if_many", severity_sort = true })
 end, { desc = "Line Diagnostics" })
 map("n", "<leader>cq", "<cmd>lua vim.diagnostic.setqflist()<cr>", { desc = "Diagnostics to Quickfix" })
 map("n", "<leader>cQ", "<cmd>lua vim.diagnostic.setloclist()<cr>", { desc = "Diagnostics to Location List" })
-map("n", "<leader>clr", "<cmd>LspRestart<cr>", { desc = "Restart LSP" })
+map("n", "<leader>clr", "<cmd>lsp restart<cr>", { desc = "Restart LSP" })
 map("n", "<leader>clf", "<cmd>lua vim.lsp.buf.format({ async = true })<cr>", { desc = "Format Document (LSP)" })
 
 -- Quickfix / location list
@@ -82,12 +85,13 @@ map("n", "]l", "<cmd>lnext<cr>", { desc = "Next Location Item" })
 map("n", "[l", "<cmd>lprev<cr>", { desc = "Prev Location Item" })
 
 -- Formatting
-local conform = require("conform")
 map("n", "<leader>bf", function()
+	local conform = require("conform")
 	conform.format({ async = true, lsp_fallback = true })
 end, { desc = "Format Buffer" })
 
 map("v", "<leader>bf", function()
+	local conform = require("conform")
 	local start_pos = vim.api.nvim_buf_get_mark(0, "<")
 	local end_pos = vim.api.nvim_buf_get_mark(0, ">")
 
@@ -122,20 +126,16 @@ map("n", "<leader>gN", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev Hunk" })
 
 -- Copilot controls
 map("i", "<M-l>", function()
-	require("copilot.suggestion").accept()
-end, { desc = "Copilot Accept All", silent = true })
-
-map("i", "<M-\\>", function()
-	require("copilot.suggestion").accept_word()
-end, { desc = "Copilot Accept Word", silent = true })
+	return vim.lsp.inline_completion.get() and "" or "<M-l>"
+end, { desc = "Accept Inline Completion", expr = true, silent = true })
 
 map("i", "<M-]>", function()
-	require("copilot.suggestion").next()
-end, { desc = "Copilot Next Suggestion", silent = true })
+	vim.lsp.inline_completion.select({ count = 1 })
+end, { desc = "Next Inline Completion", silent = true })
 
 map("i", "<M-[>", function()
-	require("copilot.suggestion").prev()
-end, { desc = "Copilot Previous Suggestion", silent = true })
+	vim.lsp.inline_completion.select({ count = -1 })
+end, { desc = "Previous Inline Completion", silent = true })
 
 -- Agentic controls
 map({ "n", "v" }, "<leader>ac", function()
@@ -165,18 +165,6 @@ map({ "n", "v" }, "<leader>xp", '"+p', { desc = "Paste from system clipboard" })
 map({ "n", "v" }, "<leader>xP", '"+P', { desc = "Paste before from system clipboard" })
 map({ "n", "v" }, "<leader>xd", '"_d', { desc = "Delete without yanking" })
 map("n", "<leader>xD", '"_D', { desc = "Delete line tail without yanking" })
-
--- Folds (using ufo)
-map('n', 'zR', require('ufo').openAllFolds)
-map('n', 'zM', require('ufo').closeAllFolds)
-map('n', 'zr', require('ufo').openFoldsExceptKinds)
-map('n', 'zm', require('ufo').closeFoldsWith)
-map('n', 'K', function()
-	local winid = require('ufo').peekFoldedLinesUnderCursor()
-	if not winid then
-		vim.lsp.buf.hover()
-	end
-end)
 
 -- which-key groups
 local wk = require("which-key")

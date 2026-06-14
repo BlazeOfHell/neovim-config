@@ -17,6 +17,13 @@ local function build_hooks(ev)
 		end
 		vim.cmd("TSUpdateSync")
 	end
+
+	if name == "blink.cmp" then
+		if not ev.data.active then
+			vim.cmd.packadd(name)
+		end
+		require("blink.cmp").build()
+	end
 end
 
 vim.api.nvim_create_autocmd("PackChanged", {
@@ -51,6 +58,7 @@ vim.pack.add({
 	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/folke/lazydev.nvim" },
+	{ src = "https://github.com/MeanderingProgrammer/render-markdown.nvim" },
 	{ src = "https://github.com/carlos-algms/agentic.nvim" },
 }, {
 	confirm = false,

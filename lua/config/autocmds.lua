@@ -17,6 +17,13 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	pattern = "AgenticChat",
+	callback = function(ev)
+		pcall(vim.treesitter.start, ev.buf, "markdown")
+	end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "php" },
 	callback = function()
 		vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"

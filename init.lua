@@ -27,6 +27,7 @@ vim.opt.winborder = "rounded"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
+vim.g.clipboard = "osc52"
 
 vim.opt.wrap = false
 vim.opt.scrolloff = 10

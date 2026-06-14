@@ -76,6 +76,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		if client.name == "copilot" then
 			client.server_capabilities.hoverProvider = false
+
+			--AI detox, disable copilot suggestions until hotkeys are pressed
+			return
 		end
 
 		if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, ev.buf) then

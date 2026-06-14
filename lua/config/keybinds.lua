@@ -125,6 +125,11 @@ map("n", "<leader>gN", "<cmd>Gitsigns prev_hunk<cr>", { desc = "Prev Hunk" })
 
 
 -- Copilot controls
+map({"n", "i", "v"}, "<M-c>", function()
+	local enabled = vim.lsp.inline_completion.is_enabled({ bufnr = 0 })
+	vim.lsp.inline_completion.enable(not enabled, { bufnr = 0 })
+end, { desc = "Toggle Copilot Suggestions", silent = true })
+
 map("i", "<M-l>", function()
 	return vim.lsp.inline_completion.get() and "" or "<M-l>"
 end, { desc = "Accept Inline Completion", expr = true, silent = true })
@@ -159,7 +164,8 @@ map("n", "<leader>as", function()
 end, { desc = "Agentic Stop generation", silent = true })
 
 -- Clipboard (explicit system clipboard actions)
-map({ "n", "v" }, "<leader>xy", '"+y', { desc = "Yank to system clipboard" })
+map("n", "<leader>xy", '"+yy', { desc = "Yank line to system clipboard" })
+map("v", "<leader>xy", '"+y', { desc = "Yank selection to system clipboard" })
 map("n", "<leader>xY", '"+Y', { desc = "Yank line to system clipboard" })
 map({ "n", "v" }, "<leader>xp", '"+p', { desc = "Paste from system clipboard" })
 map({ "n", "v" }, "<leader>xP", '"+P', { desc = "Paste before from system clipboard" })

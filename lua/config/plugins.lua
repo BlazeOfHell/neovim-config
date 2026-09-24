@@ -80,8 +80,8 @@ require("neo-tree").setup({
 		renderers = {
 			file = {
 				{ "icon" },
-				{ "name", use_git_status_colors = true },
-				{ "modified", zindex = 20, align = "right" },
+				{ "name",       use_git_status_colors = true },
+				{ "modified",   zindex = 20,                 align = "right" },
 				{ "diagnostics" },
 				{ "git_status" },
 			},
@@ -113,6 +113,8 @@ require("gitsigns").setup({
 	sign_priority = 100,
 })
 
+local default_prettier_config = vim.fn.stdpath("config") .. "/prettier-default.json"
+
 require("conform").setup({
 	formatters_by_ft = {
 		lua = { "stylua" },
@@ -128,6 +130,24 @@ require("conform").setup({
 		html = { "prettierd", "prettier", stop_after_first = true },
 		markdown = { "prettierd", "prettier", stop_after_first = true },
 		yaml = { "prettierd", "prettier", stop_after_first = true },
+		njk = { "djlint" },
+	},
+	formatters = {
+		prettierd = {
+			env = {
+				PRETTIERD_DEFAULT_CONFIG = default_prettier_config,
+			},
+		},
+		prettier = {
+			prepend_args = function(self, ctx)
+				local prettier = require("conform.formatters.prettier")
+				if prettier.cwd(self, ctx) then
+					return {}
+				end
+
+				return { "--config", default_prettier_config }
+			end,
+		},
 	},
 })
 

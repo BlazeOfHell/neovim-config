@@ -17,24 +17,25 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
-vim.lsp.config("ts_ls", {
-	filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
-})
-
-local volar_path = vim.fn.stdpath("data")
+local vue_language_server_path = vim.fn.stdpath("data")
 	.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 
 vim.lsp.config("vtsls", {
-	filetypes = { "vue" },
-	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
+	filetypes = {
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"vue",
+	},
+
 	settings = {
 		vtsls = {
 			tsserver = {
 				globalPlugins = {
 					{
 						name = "@vue/typescript-plugin",
-						location = volar_path,
+						location = vue_language_server_path,
 						languages = { "vue" },
 						configNamespace = "typescript",
 					},
@@ -44,13 +45,12 @@ vim.lsp.config("vtsls", {
 	},
 })
 
-vim.lsp.config("vue_ls", {
-	filetypes = { "vue" },
-	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
-})
-
 vim.lsp.config("somesass_ls", {
 	filetypes = { "sass", "scss", "css", "vue" },
+})
+
+vim.lsp.config("cssls", {
+	filetypes = { "less", "css", "vue" }
 })
 
 vim.lsp.config("intelephense", {
@@ -67,6 +67,20 @@ vim.lsp.config("gopls", {
 			linksInHover = false,
 		},
 	},
+})
+
+vim.lsp.config("pylsp", {
+	filetypes = { "python" },
+})
+
+vim.lsp.config("djls", {
+	-- Require a Django marker instead of the default generic Python/Git markers.
+	root_dir = function(bufnr, on_dir)
+		local root = vim.fs.root(bufnr, { "manage.py", "djls.toml" })
+		if root then
+			on_dir(root)
+		end
+	end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -96,10 +110,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 vim.lsp.enable("lua_ls")
-vim.lsp.enable("ts_ls")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("vue_ls")
-vim.lsp.enable("somesass_ls")
+-- vim.lsp.enable("somesass_ls")
+vim.lsp.enable("cssls")
 vim.lsp.enable("intelephense")
 vim.lsp.enable("copilot")
 vim.lsp.enable("gopls")
+vim.lsp.enable("pylsp")
+vim.lsp.enable("djls")

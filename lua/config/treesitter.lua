@@ -23,6 +23,7 @@ M.parsers = {
 	"typescript",
 	"vue",
 	"yaml",
+	"caddy",
 }
 
 M.filetypes = {
@@ -48,6 +49,7 @@ M.filetypes = {
 	"typescriptreact",
 	"vue",
 	"yaml",
+	"caddy",
 }
 
 vim.api.nvim_create_user_command("TSInstallConfigured", function(args)

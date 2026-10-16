@@ -41,3 +41,12 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 set_fold_highlights()
+
+vim.filetype.add({
+    filename = {
+        Caddyfile = "caddy",
+    },
+    extension = {
+        caddy = "caddy",
+    },
+})

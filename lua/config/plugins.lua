@@ -170,7 +170,7 @@ require("agentic").setup({
 	},
 	acp_providers = {
 		["codex-acp"] = {
-			default_mode = "auto",
-		},
-	},
+			default_thought_level = "medium"
+		}
+	}
 })
